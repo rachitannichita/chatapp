@@ -3,7 +3,14 @@ require 'test_helper'
 class UsersEditTest < ActionDispatch::IntegrationTest
 
   def setup
-    @user = users(:michael)
+    @user                 = users(:michael)
+    @not_activated_user   = users(:acti)
+  end
+
+  test "unactivated edit" do
+    log_in_as(@not_activated_user)
+    get edit_user_path(@not_activated_user)
+    assert_redirected_to login_url
   end
 
   test "unsuccessful edit" do
@@ -14,7 +21,6 @@ class UsersEditTest < ActionDispatch::IntegrationTest
                                               email: "foo@invalid",
                                               password:              "foo",
                                               password_confirmation: "bar" } }
-
     assert_template 'users/edit'
   end
 
